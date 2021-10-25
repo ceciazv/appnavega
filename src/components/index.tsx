@@ -1,0 +1,6 @@
+export { default as Button } from './Button'
+export { default as ButtonT } from './ButtonT'
+export { default as Header } from './Header'
+export { default as ButtonPets } from './ButtonPets'
+export { default as ButtonAct } from './ButtonAct'
+export { default as Vac } from './Vac'
