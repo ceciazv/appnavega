@@ -1,37 +1,54 @@
 import React from "react";
-import { useRoute } from "@react-navigation/core";
-import { useNavigation } from "@react-navigation/core";
-import { Alert } from "react-native";
-import { Container, Message, Pets } from "./style";
-import { Header, Vac } from "../../components";
+import { FlatList, StyleSheet, SafeAreaView, Text, View } from "react-native";
+
+import { Header, ButtonPets} from "../../components";
+import data from "../../services/data";
 import { PetProps } from "../../interfaces/Pet.interface";
-import { VacinaParamProps } from "../../interfaces/Vac.interface";
+import { PetTypes } from "../../types/ScreenStack.types";
+import { useAuth } from "../../hook/auth";
 
-export default function Pet() {
-  const route = useRoute();
-  const { title, image, castracao, vacinacao, id } =
-    route.params as PetProps;
-  const navigation = useNavigation();
-  function handleVacinaAnimal() {
-    navigation.navigate("Vacina", { title, image });
+export default function Home({ navigation }: PetTypes) {
+  const { user } = useAuth();
+  function handlePet(item: PetProps) {
+    navigation.navigate("Pet", { ...item });
   }
-  function vacinaEdit(item: VacinaParamProps) {
-    navigation.navigate("Vacina", { title, image, ...item });
-  }
-  function vacinaRemove(item: VacinaParamProps) {
-    console.log("Vacina", { title, image, ...item });
-  }
-
   return (
-    <Container>
-      <Header name={title} image={image} />
-      <Vac
-        title="Vacinação"
-        onPress={handleVacinaAnimal}
-        buttonEdit={vacinaEdit}
-        buttonRemove={vacinaRemove}
-        vacinacao={vacinacao}
-      />
-    </Container>
+    <SafeAreaView style={styles.container}>
+      {user && (
+        <Header
+          hello="Olá"
+          name={user?.name}
+          image={{ uri: user.profile_photo_url }}
+        />
+      )}
+      <Text style={styles.message}>Você possui 2 animais adotados</Text>
+      <View>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <ButtonPets
+              key={item.id}
+              title={item.title}
+              onPress={() => handlePet(item)}
+              image={item.image}
+            />
+          )}
+          numColumns={2}
+        />
+      </View>
+    </SafeAreaView>
   );
-  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginBottom: 110,
+    marginTop: 10,
+  },
+  message: {
+    fontSize: 18,
+    marginTop: 20,
+    marginLeft: 20,
+  },
+});
