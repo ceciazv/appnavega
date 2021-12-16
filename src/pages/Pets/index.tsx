@@ -21,7 +21,6 @@ export default function Home({ navigation }: PetTypes) {
           image={{ uri: user.profile_photo_url }}
         />
       )}
-      <Text style={styles.message}>Você possui 2 animais adotados</Text>
       <View>
         <FlatList
           data={data}

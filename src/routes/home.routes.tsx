@@ -1,30 +1,46 @@
 import React from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import AnimalStack from "./pet.routes";
+import { Text, StyleSheet } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import PetStack from "./pet.routes";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../styles/colors";
+import { Sair } from "../pages";
 
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function HomeRoute() {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeBackgroundColor: colors.green,
-        inactiveBackgroundColor: colors.brownLight,
-        activeTintColor: colors.white,
+    <Drawer.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerStyle: { backgroundColor: colors.green },
+        headerTintColor: colors.white,
+        headerTitle: () => <Text style={styles.title}>Animais</Text>,
+        drawerStyle: {backgroundColor: colors.green},
+        drawerInactiveTintColor: colors.white,
+        drawerActiveTintColor: colors.white,
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={AnimalStack}
+      <Drawer.Screen
+        name="PetStack"
+        component={PetStack}
         options={{
-          tabBarLabel: "Home",
-          tabBarIcon: () => (
-            <FontAwesome5 name="dog" size={24} color={colors.white} />
+          drawerLabel: "Pets",
+          drawerIcon: () => (
+            <MaterialCommunityIcons name="dog" size={24} color={colors.white} />
           ),
         }}
       />
-    </Tab.Navigator>
+
+      <Drawer.Screen name="Sair" component={Sair} />
+    </Drawer.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    color: colors.white,
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+});

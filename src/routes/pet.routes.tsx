@@ -1,15 +1,20 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Home, Pets, CDRvaci } from "../pages";
+import { CDRvaci, Home, Pets } from "../pages";
+import { PetStackParamList } from "../types/ScreenStack.types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<PetStackParamList>();
 
-export default function PetRoute() {
+export default function AnimalRoute() {
   return (
-    <Stack.Navigator headerMode="none">
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Pets" component={Pets} />
-      <Stack.Screen name="CDRvaci" component={CDRvaci} />
+      <Stack.Screen name="Pet" component={Pets} />
+      <Stack.Screen name="Vacina" component={CDRvaci} />
     </Stack.Navigator>
   );
 }

@@ -7,10 +7,11 @@ import React, {
   } from "react";
   import api from "../services/api";
   import { IAuthState, IAuthContextData } from "../interfaces/User.interface";
-  import { AsyncStorage } from '@react-native-async-storage/async-storage'
+  import  AsyncStorage  from '@react-native-async-storage/async-storage';
+  import   apiUser   from "../services/data/User";
   
   const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
-  
+
   const AuthProvider: React.FC = ({ children }) => {
     const [auth, setAuth] = useState<IAuthState>({} as IAuthState);
   
@@ -20,12 +21,11 @@ import React, {
         password,
       });
       const { access_token, user } = response.data.data;
+      api.defaults.headers.common.Authorization = `Bearer ${access_token}`;
       setAuth({ access_token, user });
   
       await AsyncStorage.setItem("access_token", access_token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
-  
-      api.defaults.headers.common.authorization = `bearer ${access_token}`;
     }, []);
   
     const register = useCallback(async ({ name, email, password }) => {
@@ -35,12 +35,11 @@ import React, {
         password,
       });
       const { access_token, user } = response.data.data;
+      api.defaults.headers.common.Authorization = `Bearer ${access_token}`;
       setAuth({ access_token, user });
   
       await AsyncStorage.setItem("access_token", access_token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
-  
-      api.defaults.headers.common.authorization = `bearer ${access_token}`;
     }, []);
   
     const removeLocalStorage = async () => {
@@ -48,10 +47,11 @@ import React, {
       await AsyncStorage.removeItem("user");
     };
   
-    const signOut = useCallback(() => {
+    const signOut = useCallback(async () => {
       setAuth({} as IAuthState);
       removeLocalStorage();
       delete api.defaults.headers.common.authorization;
+      await apiUser.logout();
     }, []);
   
     const loadUserStorageData = useCallback(async () => {
@@ -59,8 +59,8 @@ import React, {
       const user = await AsyncStorage.getItem("user");
   
       if (access_token && user) {
+        api.defaults.headers.common.Authorization = `Bearer ${access_token}`;
         setAuth({ access_token, user: JSON.parse(user) });
-        api.defaults.headers.common.authorization = `bearer ${access_token}`;
       }
     }, []);
   

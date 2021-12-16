@@ -16,7 +16,7 @@ export type LoginTypes = {
 // Animal Stack
 export type PetStackParamList = {
   Home: undefined
-  Animal: PetProps
+  Pet: PetProps
   Castra: {
     title: string
     image: ImageSourcePropType
@@ -27,6 +27,9 @@ export type PetStackParamList = {
     title: string
     image: ImageSourcePropType
     castracao?: string
+    idade: string
+    peso: string
+    raca: string
     vacinacao?: {
       nome: string
       data: string
